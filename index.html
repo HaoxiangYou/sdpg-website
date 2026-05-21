@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="SDPG: Efficient On-policy Visual RL via Stochastic Decoupled Policy Gradient">
+  <meta name="description" content="SDPG is a lightweight visual reinforcement learning method that trains diverse visuomotor control policies end-to-end within a few hours on a single NVIDIA RTX 4080 GPU.">
+  <meta name="keywords" content="Visual RL, Reinforcement Learning, Policy Gradient, Sim-to-Real, Humanoid Locomotion, Dexterous Manipulation, Robotics">
+  <meta name="author" content="Haoxiang You, Yilang Liu, Ian Abraham">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Yale University">
+  <meta property="og:title" content="SDPG: Efficient On-policy Visual RL via Stochastic Decoupled Policy Gradient">
+  <meta property="og:description" content="A lightweight visual RL method that trains diverse visuomotor control policies end-to-end within a few hours on a single GPU.">
+  <meta property="og:image" content="static/images/preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="SDPG - Visual RL teaser">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SDPG: Efficient On-policy Visual RL via Stochastic Decoupled Policy Gradient">
+  <meta name="twitter:description" content="A lightweight visual RL method that trains diverse visuomotor control policies end-to-end within a few hours on a single GPU.">
+  <meta name="twitter:image" content="static/images/preview.png">
+
+  <!-- Academic/Research Specific -->
+  <meta name="citation_title" content="Efficient On-policy Visual RL via Stochastic Decoupled Policy Gradient">
+  <meta name="citation_author" content="You, Haoxiang">
+  <meta name="citation_author" content="Liu, Yilang">
+  <meta name="citation_author" content="Abraham, Ian">
+  <meta name="citation_publication_date" content="2026">
+
+  <meta name="theme-color" content="#2563eb">
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://ajax.googleapis.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <title>SDPG: Efficient On-policy Visual RL via Stochastic Decoupled Policy Gradient | Under review</title>
+
+  <!-- Bump ?v=N whenever favicon.ico is replaced to bust the browser cache -->
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico?v=2">
+  <link rel="shortcut icon" type="image/x-icon" href="static/images/favicon.ico?v=2">
+  <link rel="apple-touch-icon" href="static/images/favicon.ico?v=2">
+
+  <!-- Critical CSS -->
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <!-- Non-critical CSS -->
+  <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/bulma-slider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+  <noscript>
+    <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  </noscript>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* Colored acronym in the publication title */
+    .publication-title .accent { font-weight: 800; }
+    .publication-title .a-s { color: #3b82f6; font-weight: 800; }
+    .publication-title .a-d { color: #ef4444; font-weight: 800; }
+    .publication-title .a-p { color: #f59e0b; font-weight: 800; }
+    .publication-title .a-g { color: #10b981; font-weight: 800; }
+
+    /* Mixed-modality task carousel (remogen-style) */
+    .sdpg-carousel-shell {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .sdpg-carousel {
+      position: relative;
+      padding: 1.2rem 1.35rem 1rem;
+    }
+    .sdpg-carousel-stage {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #e6e8ec;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.10);
+      padding: 0.6rem;
+    }
+    .sdpg-carousel-media {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #111827;
+    }
+    .sdpg-carousel-media video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+    }
+    .sdpg-carousel-panel { display: none; }
+    .sdpg-carousel-panel.is-active { display: block; }
+
+    .sdpg-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 2.95rem;
+      height: 2.95rem;
+      border-radius: 999px;
+      border: 1px solid #e6e8ec;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+      color: #213047;
+      font-size: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 5;
+    }
+    .sdpg-arrow:hover { background: #fff; }
+    .sdpg-arrow.prev { left: 0.3rem; }
+    .sdpg-arrow.next { right: 0.3rem; }
+
+    .sdpg-dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.4rem;
+      margin-top: 0.9rem;
+    }
+    .sdpg-dot {
+      width: 0.78rem;
+      height: 0.78rem;
+      border-radius: 999px;
+      border: 0;
+      background: #d5dbe4;
+      cursor: pointer;
+      padding: 0;
+    }
+    .sdpg-dot.is-active { background: #3066ff; }
+
+    .sdpg-caption {
+      text-align: center;
+      padding-top: 0.9rem;
+    }
+    .sdpg-caption-label {
+      color: #6b7280;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .sdpg-caption-text {
+      margin-top: 0.3rem;
+      font-size: 1.5rem;
+      line-height: 1.2;
+      color: #0c1f3f;
+      font-weight: 700;
+    }
+    .sdpg-caption-meta {
+      margin-top: 0.3rem;
+      color: #33435e;
+      font-size: 1rem;
+    }
+    @media (max-width: 640px) {
+      .sdpg-caption-text { font-size: 1.2rem; }
+      .sdpg-arrow { width: 2.4rem; height: 2.4rem; }
+    }
+  </style>
+
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/bulma-carousel.min.js"></script>
+  <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+</head>
+<body>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <main id="main-content">
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title"><span class="accent"><span class="a-s">S</span><span class="a-d">D</span><span class="a-p">P</span><span class="a-g">G</span></span>: Efficient On-policy Visual RL via<br>
+              <span class="a-s">S</span>tochastic <span class="a-d">D</span>ecoupled <span class="a-p">P</span>olicy <span class="a-g">G</span>radient</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://haoxiangyou.github.io/" target="_blank">Haoxiang You</a><sup>1*</sup>,</span>
+              <span class="author-block">
+                <a href="https://yilangliu.github.io/" target="_blank">Yilang Liu</a><sup>1*</sup>,</span>
+              <span class="author-block">
+                <a href="https://profiles.sydney.edu.au/ian.abraham" target="_blank">Ian Abraham</a><sup>2</sup></span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>Yale University &nbsp;&nbsp; <sup>2</sup>University of Sydney</span>
+              <br>
+              <span class="author-block"><b>Under review</b></span>
+              <br>
+              <span class="eql-cntrb"><small><sup>*</sup>Equal Contribution</small></span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- TODO: Update href and remove disabled styling once the paper PDF is available -->
+                <span class="link-block">
+                  <a href="#" aria-disabled="true" title="Paper coming soon"
+                  class="external-link button is-normal is-rounded is-dark is-disabled"
+                  style="opacity:0.6; cursor: not-allowed; pointer-events: none;">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper (coming soon)</span>
+                  </a>
+                </span>
+
+                <!-- TODO: Update href and remove disabled styling once the arXiv submission is live -->
+                <span class="link-block">
+                  <a href="#" aria-disabled="true" title="arXiv coming soon"
+                  class="external-link button is-normal is-rounded is-dark is-disabled"
+                  style="opacity:0.6; cursor: not-allowed; pointer-events: none;">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv (coming soon)</span>
+                  </a>
+                </span>
+
+                <!-- TODO: Update href and remove disabled styling once the repository is public -->
+                <span class="link-block">
+                  <a href="#" aria-disabled="true" title="Code release coming soon"
+                  class="external-link button is-normal is-rounded is-dark is-disabled"
+                  style="opacity:0.6; cursor: not-allowed; pointer-events: none;">
+                    <span class="icon">
+                      <i class="fas fa-code"></i>
+                    </span>
+                    <span>Code (coming soon)</span>
+                  </a>
+                </span>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Teaser video / image -->
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <video poster="static/images/preview.png" id="teaser" autoplay controls muted loop playsinline preload="metadata" style="width:100%; max-width:100%;">
+          <source src="static/videos/SDPG_Presentation.mp4" type="video/mp4">
+        </video>
+        <h2 class="subtitle has-text-centered" style="margin-top: 1rem;">
+          <strong>SDPG</strong> trains diverse visuomotor control policies end-to-end within a few hours on a single NVIDIA RTX 4080 GPU.
+          Tasks span dexterous manipulation, challenging locomotion, egocentric &amp; third-person views, single &amp; multi-camera setups, and RGB &amp; depth modalities.
+        </h2>
+      </div>
+    </div>
+  </section>
+  <!-- End teaser -->
+
+
+  <!-- Paper abstract -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              We present the <strong>Stochastic Decoupled Policy Gradient (SDPG)</strong>, a lightweight visual reinforcement learning (RL) method
+              that trains diverse visuomotor control policies end-to-end within a few hours on a single NVIDIA RTX 4080 GPU.
+              SDPG estimates policy gradients via random perturbations of trajectory rollouts, requiring orders of magnitude fewer
+              batch-rendered environments and substantially reducing compute and memory overhead.
+              On visual MuJoCo benchmarks, SDPG consistently outperforms baseline methods in training time, memory usage, and rewards.
+              Finally, to support future research, we introduce a suite of realistic visual robotics benchmarks spanning dexterous
+              manipulation and challenging locomotion, and demonstrate effective sim-to-real transfer on physical hardware.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End paper abstract -->
+
+
+  <!-- Method Overview -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column">
+          <h2 class="title is-3">Method Overview</h2>
+          <div class="content has-text-justified">
+            <p>
+              SDPG combines <em>batch-rendered</em> and <em>physics-only</em> environments to estimate policy gradients.
+              Batch-rendered environments evaluate policy performance, while physics-only environments provide perturbed rollouts
+              for policy improvement. Instead of computing trajectory gradients analytically, SDPG estimates them via random
+              perturbations, eliminating the need for full trajectory differentiation. An adaptive exploration strategy and
+              reward-invariant normalization yield numerically stable updates throughout training.
+            </p>
+          </div>
+          <figure class="image">
+            <!-- TODO: Replace with higher-resolution diagram if available -->
+            <img src="static/images/SDPG_diagram.png" alt="SDPG diagram" loading="lazy" />
+            <figcaption class="has-text-centered" style="margin-top: 0.5rem;">
+              <small><strong>Figure 1.</strong> SDPG combines batch-rendered and physics-only environments to estimate policy gradients.</small>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="columns is-centered" style="margin-top: 2rem;">
+        <div class="column">
+          <figure class="image">
+            <img src="static/images/stochastic_smoothing.png" alt="Stochastic smoothing" loading="lazy"/>
+            <figcaption class="has-text-centered" style="margin-top: 0.5rem;">
+              <small><strong>Figure 2.</strong> <strong>Left:</strong> a 1D toy example showing the original function and its smoothed surrogate.
+                <strong>Right:</strong> gradient norms during training&mdash;SDPG maintains stable gradients, while a baseline (SAPO) exhibits large spikes.</small>
+            </figcaption>
+          </figure>
+        </div>
+        <div class="column">
+          <figure class="image">
+            <img src="static/images/guided_search_diagram.png" alt="Guided search diagram" loading="lazy"/>
+            <figcaption class="has-text-centered" style="margin-top: 0.5rem;">
+              <small><strong>Figure 3.</strong> A unified view of policy-based methods. SDPG is a policy gradient variant in which trajectory
+                optimization is performed via stochastic sampling.</small>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End method overview -->
+
+
+  <!-- Benchmark Results -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Visual MuJoCo Benchmark</h2>
+      <div class="content has-text-justified">
+        <p>
+          On visual MuJoCo benchmarks, SDPG achieves the <strong>highest rewards</strong>, matching state-based performance across all tasks.
+          It is competitive with teacher&ndash;student distillation in training time and significantly faster than other end-to-end visual
+          RL methods. Despite being on-policy, SDPG's memory usage is comparable to off-policy and model-based approaches&mdash;enabled by
+          accurate gradient estimation with only <strong>64</strong> batched environments (vs. 4096 in PPO), allowing training on a single
+          NVIDIA RTX 4080 GPU.
+        </p>
+      </div>
+
+      <figure class="image">
+        <img src="static/images/mujoco_benchmark.png" alt="MuJoCo benchmark" loading="lazy"/>
+        <figcaption class="has-text-centered" style="margin-top: 0.5rem;">
+          <small><strong>Figure 4.</strong> SDPG matches distillation in training speed, is significantly faster than DrQ-v2 and DreamerV3,
+            and achieves higher final rewards on humanoid tasks.</small>
+        </figcaption>
+      </figure>
+
+      <div class="columns is-centered" style="margin-top: 2rem;">
+        <div class="column">
+          <figure class="image">
+            <img src="static/images/memory_scale.png" alt="Memory scaling" loading="lazy"/>
+            <figcaption class="has-text-centered" style="margin-top: 0.5rem;">
+              <small><strong>Figure 5.</strong> Memory scaling. Visual environments require significantly more memory than state-based ones.</small>
+            </figcaption>
+          </figure>
+        </div>
+        <div class="column">
+          <figure class="image">
+            <img src="static/images/state_vs_vision.png" alt="State vs vision" loading="lazy"/>
+            <figcaption class="has-text-centered" style="margin-top: 0.5rem;">
+              <small><strong>Figure 6.</strong> State vs. vision inputs. Final rewards are similar across modalities; vision requires 2&ndash;4&times; more iterations.</small>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- Memory usage table -->
+      <div class="content" style="margin-top: 2rem;">
+        <h3 class="title is-5 has-text-centered">Memory Usage (GB)</h3>
+        <div class="table-container">
+          <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth has-text-centered">
+            <thead>
+              <tr><th>Method</th><th>Hopper</th><th>Walker</th><th>Ant</th><th>Humanoid</th></tr>
+            </thead>
+            <tbody>
+              <tr style="background-color:#e6f0ff;"><td><strong>SDPG (Ours)</strong></td><td>10.2</td><td>10.3</td><td>10.3</td><td>10.5</td></tr>
+              <tr style="background-color:#ffe6e6;"><td>PPO<sup>&dagger;</sup></td><td>48</td><td>48</td><td>49</td><td>50</td></tr>
+              <tr><td>DrQv2</td><td>10.6</td><td>8.2</td><td>10.5</td><td>11.6</td></tr>
+              <tr><td>DreamerV3</td><td>10.8</td><td>10.8</td><td>10.8</td><td>10.9</td></tr>
+              <tr><td>Distillation</td><td>10.6</td><td>10.6</td><td>10.3</td><td>10.7</td></tr>
+            </tbody>
+          </table>
+          <p class="has-text-centered"><small><sup>&dagger;</sup> PPO memory is estimated with 4096 environments and state-based hyperparameters; all other methods use 64 batched environments.</small></p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End benchmark results -->
+
+
+  <!-- Learned policy trajectories -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Learned Policies</h2>
+      <div class="content has-text-justified">
+        <p>
+          We apply SDPG to a suite of challenging robotics tasks where the robot receives both egocentric images and proprioceptive
+          measurements, mimicking real hardware sensors. Below, we show example trajectories generated by the learned policy.
+        </p>
+      </div>
+      <figure class="image">
+        <img src="static/images/sim_traj.png" alt="Learned policy trajectories" loading="lazy"/>
+        <figcaption class="has-text-centered" style="margin-top: 0.5rem;">
+          <small><strong>Figure 7.</strong>
+            <strong>Top:</strong> Allegro hand reorienting a cube.
+            <strong>Middle:</strong> G1 hurdling.
+            <strong>Bottom:</strong> Aloha performs insertion.</small>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+  <!-- End learned trajectories -->
+
+
+  <!-- MuJoCo benchmark videos -->
+  <section class="hero is-small is-light">
+    <div class="hero-body">
+      <div class="container">
+        <h2 class="title is-3 has-text-centered">MuJoCo Benchmark</h2>
+        <p class="has-text-centered" style="margin-bottom: 1rem;">
+          <small>Visual control on classic MuJoCo tasks from third-person RGB. SDPG matches state-based performance across all tasks.</small>
+        </p>
+
+        <div class="sdpg-carousel-shell" data-sdpg-carousel data-label="Visual MuJoCo Benchmark">
+          <div class="sdpg-carousel">
+            <button class="sdpg-arrow prev" type="button" data-prev aria-label="Previous task">&#10094;</button>
+            <button class="sdpg-arrow next" type="button" data-next aria-label="Next task">&#10095;</button>
+
+            <div class="sdpg-carousel-stage">
+              <div class="sdpg-carousel-panel is-active" data-caption-text="Hopper" data-caption-meta="Visual MuJoCo · Third-person RGB">
+                <div class="sdpg-carousel-media">
+                  <video controls muted loop playsinline preload="metadata">
+                    <source src="static/videos/mujoco_benchmarks/hopper_trajectory.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+              <div class="sdpg-carousel-panel" data-caption-text="Humanoid" data-caption-meta="Visual MuJoCo · Third-person RGB">
+                <div class="sdpg-carousel-media">
+                  <video controls muted loop playsinline preload="metadata">
+                    <source src="static/videos/mujoco_benchmarks/humanoid_black.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+              <div class="sdpg-carousel-panel" data-caption-text="Ant" data-caption-meta="Visual MuJoCo · Third-person RGB">
+                <div class="sdpg-carousel-media">
+                  <video controls muted loop playsinline preload="metadata">
+                    <source src="static/videos/mujoco_benchmarks/ant_trajectory.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+              <div class="sdpg-carousel-panel" data-caption-text="Walker" data-caption-meta="Visual MuJoCo · Third-person RGB">
+                <div class="sdpg-carousel-media">
+                  <video controls muted loop playsinline preload="metadata">
+                    <source src="static/videos/mujoco_benchmarks/walker_trajectory.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+            </div>
+
+            <div class="sdpg-dots" data-dots></div>
+
+            <div class="sdpg-caption">
+              <div class="sdpg-caption-label">Visual MuJoCo Benchmark</div>
+              <div class="sdpg-caption-text" data-caption-text-out></div>
+              <div class="sdpg-caption-meta" data-caption-meta-out></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End MuJoCo benchmark videos -->
+
+
+  <!-- Egocentric task suite videos -->
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Egocentric Task Suite</h2>
+      <p class="has-text-centered" style="margin-bottom: 1rem;">
+        <small>Challenging dexterous manipulation and locomotion tasks from on-robot sensors, trained end-to-end with SDPG.</small>
+      </p>
+
+      <div class="sdpg-carousel-shell" data-sdpg-carousel data-label="Egocentric Task Suite">
+        <div class="sdpg-carousel">
+          <button class="sdpg-arrow prev" type="button" data-prev aria-label="Previous task">&#10094;</button>
+          <button class="sdpg-arrow next" type="button" data-next aria-label="Next task">&#10095;</button>
+
+          <div class="sdpg-carousel-stage">
+            <div class="sdpg-carousel-panel is-active" data-caption-text="Allegro Hand: Cube Reorientation" data-caption-meta="Dexterous manipulation · Egocentric RGB">
+              <div class="sdpg-carousel-media">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/videos/egocentric_tasks/Allegro.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+            <div class="sdpg-carousel-panel" data-caption-text="Shadow Hand: In-Hand Manipulation" data-caption-meta="Dexterous manipulation · Egocentric RGB">
+              <div class="sdpg-carousel-media">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/videos/egocentric_tasks/shadow_hand.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+            <div class="sdpg-carousel-panel" data-caption-text="ALOHA: Peg Insertion" data-caption-meta="Bimanual manipulation · Multi-camera RGB">
+              <div class="sdpg-carousel-media">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/videos/egocentric_tasks/Aloha_combined.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+            <div class="sdpg-carousel-panel" data-caption-text="Franka: Pick" data-caption-meta="Tabletop manipulation · Egocentric RGB">
+              <div class="sdpg-carousel-media">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/videos/egocentric_tasks/Franka.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+            <div class="sdpg-carousel-panel" data-caption-text="Walker: Terrain Traversal" data-caption-meta="Bipedal locomotion · Egocentric vision">
+              <div class="sdpg-carousel-media">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/videos/egocentric_tasks/walker_terrain_trajectory.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+            <div class="sdpg-carousel-panel" data-caption-text="Unitree Go2: Stairs &amp; Box" data-caption-meta="Quadruped locomotion · Egocentric depth">
+              <div class="sdpg-carousel-media">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/videos/egocentric_tasks/Go2_stairs_box.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+            <div class="sdpg-carousel-panel" data-caption-text="Unitree Go2: Hurdle" data-caption-meta="Quadruped locomotion · Egocentric depth">
+              <div class="sdpg-carousel-media">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/videos/egocentric_tasks/Go2_hurtle.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+            <div class="sdpg-carousel-panel" data-caption-text="Unitree G1: Hurdle" data-caption-meta="Humanoid locomotion · Egocentric RGB">
+              <div class="sdpg-carousel-media">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/videos/egocentric_tasks/G1_hurtle_with_view.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+          </div>
+
+          <div class="sdpg-dots" data-dots></div>
+
+          <div class="sdpg-caption">
+            <div class="sdpg-caption-label">Egocentric Task Suite</div>
+            <div class="sdpg-caption-text" data-caption-text-out></div>
+            <div class="sdpg-caption-meta" data-caption-meta-out></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End egocentric task suite videos -->
+
+
+  <!-- Sim-to-Real: real-world experiments -->
+  <section class="hero is-small is-light">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <h2 class="title is-3 has-text-centered">Sim-to-Real: Unitree Go2</h2>
+        <div class="content has-text-justified" style="margin: 0 auto 1.25rem; max-width: 820px;">
+          <p>
+            We validate SDPG on Unitree <strong>Go2</strong> hardware. The robot uses an egocentric RealSense depth camera to perceive
+            its environment and navigate challenging terrains, including uneven surfaces, boxes, and stairs. The policy is trained
+            entirely in simulation in <strong>under 2 hours</strong> on a single GPU and transferred to the real world via
+            <strong>zero-shot sim-to-real</strong>.
+          </p>
+        </div>
+
+        <figure class="image" style="max-width: 820px; margin: 0 auto 1.5rem;">
+          <img src="static/images/go2_stair_real.png" alt="Go2 climbing stairs in the real world" loading="lazy"/>
+          <figcaption class="has-text-centered" style="margin-top: 0.5rem;">
+            <small><strong>Figure 8.</strong> Go2 trained with a depth camera on diverse terrains and transferred zero-shot to real stairs.</small>
+          </figcaption>
+        </figure>
+
+        <div class="sdpg-carousel-shell" data-sdpg-carousel data-label="Sim-to-Real on Unitree Go2">
+          <div class="sdpg-carousel">
+            <button class="sdpg-arrow prev" type="button" data-prev aria-label="Previous experiment">&#10094;</button>
+            <button class="sdpg-arrow next" type="button" data-next aria-label="Next experiment">&#10095;</button>
+
+            <div class="sdpg-carousel-stage">
+              <div class="sdpg-carousel-panel is-active" data-caption-text="Box Climbing" data-caption-meta="Go2 hardware · RealSense depth · Zero-shot transfer">
+                <div class="sdpg-carousel-media">
+                  <video controls muted loop playsinline preload="metadata">
+                    <source src="static/videos/real_experiments/real_go2_box.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+              <div class="sdpg-carousel-panel" data-caption-text="Stairs (Run 1)" data-caption-meta="Go2 hardware · RealSense depth · Zero-shot transfer">
+                <div class="sdpg-carousel-media">
+                  <video controls muted loop playsinline preload="metadata">
+                    <source src="static/videos/real_experiments/real_go2_stair_0.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+              <div class="sdpg-carousel-panel" data-caption-text="Stairs (Run 2)" data-caption-meta="Go2 hardware · RealSense depth · Zero-shot transfer">
+                <div class="sdpg-carousel-media">
+                  <video controls muted loop playsinline preload="metadata">
+                    <source src="static/videos/real_experiments/real_go2_stair_1.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+              <div class="sdpg-carousel-panel" data-caption-text="Uneven Stone Terrain" data-caption-meta="Go2 hardware · RealSense depth · Zero-shot transfer">
+                <div class="sdpg-carousel-media">
+                  <video controls muted loop playsinline preload="metadata">
+                    <source src="static/videos/real_experiments/real_go2_stone.mp4" type="video/mp4">
+                  </video>
+                </div>
+              </div>
+            </div>
+
+            <div class="sdpg-dots" data-dots></div>
+
+            <div class="sdpg-caption">
+              <div class="sdpg-caption-label">Sim-to-Real on Unitree Go2</div>
+              <div class="sdpg-caption-text" data-caption-text-out></div>
+              <div class="sdpg-caption-meta" data-caption-meta-out></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End real-world experiments videos -->
+
+
+  <script>
+    (function () {
+      document.querySelectorAll('[data-sdpg-carousel]').forEach(function (root) {
+        var panels      = root.querySelectorAll('.sdpg-carousel-panel');
+        var dotsWrap    = root.querySelector('[data-dots]');
+        var captionText = root.querySelector('[data-caption-text-out]');
+        var captionMeta = root.querySelector('[data-caption-meta-out]');
+        var prevBtn     = root.querySelector('[data-prev]');
+        var nextBtn     = root.querySelector('[data-next]');
+        if (!panels.length || !dotsWrap) return;
+        var active = 0;
+
+        function render(i) {
+          active = (i + panels.length) % panels.length;
+          panels.forEach(function (p, idx) {
+            p.classList.toggle('is-active', idx === active);
+            var v = p.querySelector('video');
+            if (v && idx !== active) { try { v.pause(); } catch (e) {} }
+          });
+          Array.prototype.forEach.call(dotsWrap.children, function (d, idx) {
+            d.classList.toggle('is-active', idx === active);
+          });
+          var p = panels[active];
+          if (captionText) captionText.textContent = p.getAttribute('data-caption-text') || '';
+          if (captionMeta) captionMeta.textContent = p.getAttribute('data-caption-meta') || '';
+        }
+
+        panels.forEach(function (_, idx) {
+          var d = document.createElement('button');
+          d.className = 'sdpg-dot' + (idx === 0 ? ' is-active' : '');
+          d.type = 'button';
+          d.setAttribute('aria-label', 'Slide ' + (idx + 1));
+          d.addEventListener('click', function () { render(idx); });
+          dotsWrap.appendChild(d);
+        });
+        if (prevBtn) prevBtn.addEventListener('click', function () { render(active - 1); });
+        if (nextBtn) nextBtn.addEventListener('click', function () { render(active + 1); });
+        render(0);
+      });
+    })();
+  </script>
+
+
+  <!-- BibTeX citation -->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@misc{you2026sdpg,
+  title  = {Efficient On-policy Visual {RL} via Stochastic Decoupled Policy Gradient},
+  author = {You, Haoxiang and Liu, Yilang and Abraham, Ian},
+  note   = {Under review},
+  year   = {2026}
+}</code></pre>
+    </div>
+  </section>
+  <!-- End BibTeX citation -->
+
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content has-text-centered">
+            <p>
+              This page was built using the
+              <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>,
+              adapted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+              Licensed under a
+              <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  </main>
+</body>
+</html>
