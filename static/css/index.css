@@ -341,6 +341,13 @@ body {
   margin-bottom: 1.5rem;
 }
 
+/* Keep bold text the same color as body so it reads consistently across
+   plain `.section` and `.hero.is-light` sections (bulma forces #363636 in
+   plain sections but lets it inherit inside heroes). */
+.content.has-text-justified strong {
+  color: inherit;
+}
+
 /* Footer Improvements */
 .footer {
   background: var(--background-secondary);

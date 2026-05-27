@@ -8,7 +8,7 @@
   <meta name="title" content="SDPG: Efficient On-policy Visual RL via Stochastic Decoupled Policy Gradient">
   <meta name="description" content="SDPG is a lightweight visual reinforcement learning method that trains diverse visuomotor control policies end-to-end within a few hours on a single NVIDIA RTX 4080 GPU.">
   <meta name="keywords" content="Visual RL, Reinforcement Learning, Policy Gradient, Sim-to-Real, Humanoid Locomotion, Dexterous Manipulation, Robotics">
-  <meta name="author" content="Haoxiang You, Yilang Liu, Ian Abraham">
+  <meta name="author" content="Haoxiang You, Yilang Liu, Davis Zong, Qian Wang, Teeratham Vitchutripop, Qi Wang, Daniel Rakita, Ian Abraham">
   <meta name="robots" content="index, follow">
   <meta name="language" content="English">
 
@@ -32,6 +32,11 @@
   <meta name="citation_title" content="Efficient On-policy Visual RL via Stochastic Decoupled Policy Gradient">
   <meta name="citation_author" content="You, Haoxiang">
   <meta name="citation_author" content="Liu, Yilang">
+  <meta name="citation_author" content="Zong, Davis">
+  <meta name="citation_author" content="Wang, Qian">
+  <meta name="citation_author" content="Vitchutripop, Teeratham">
+  <meta name="citation_author" content="Wang, Qi">
+  <meta name="citation_author" content="Rakita, Daniel">
   <meta name="citation_author" content="Abraham, Ian">
   <meta name="citation_publication_date" content="2026">
 
@@ -52,7 +57,7 @@
 
   <!-- Critical CSS -->
   <link rel="stylesheet" href="static/css/bulma.min.css">
-  <link rel="stylesheet" href="static/css/index.css">
+  <link rel="stylesheet" href="static/css/index.css?v=2">
 
   <!-- Non-critical CSS -->
   <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -441,9 +446,14 @@
   <section class="section">
     <div class="container is-max-desktop">
       <h2 class="title is-3 has-text-centered">Egocentric Task Suite</h2>
-      <p class="has-text-centered" style="margin-bottom: 1rem;">
-        <small>Challenging dexterous manipulation and locomotion tasks from on-robot sensors, trained end-to-end with SDPG.</small>
-      </p>
+      <div class="content has-text-justified" style="margin: 0 auto 1.25rem; max-width: 820px;">
+        <p>
+          To support further research, we release a suite of realistic, challenging tasks for visual RL spanning
+          <strong>dexterous manipulation</strong> and <strong>challenging locomotion</strong>. The suite covers diverse
+          on-robot sensor setups&mdash;<strong>RGB</strong> and <strong>depth</strong>, single- and multi-camera&mdash;paired
+          with proprioception to mimic real hardware, and every policy is trained <strong>end-to-end</strong> with SDPG.
+        </p>
+      </div>
 
       <div class="sdpg-carousel-shell" data-sdpg-carousel data-label="Egocentric Task Suite">
         <div class="sdpg-carousel">
@@ -451,17 +461,10 @@
           <button class="sdpg-arrow next" type="button" data-next aria-label="Next task">&#10095;</button>
 
           <div class="sdpg-carousel-stage">
-            <div class="sdpg-carousel-panel is-active" data-caption-text="Allegro Hand: Cube Reorientation" data-caption-meta="Dexterous manipulation · Egocentric RGB">
+            <div class="sdpg-carousel-panel is-active" data-caption-text="Franka: Pick" data-caption-meta="Tabletop manipulation · Egocentric RGB">
               <div class="sdpg-carousel-media">
                 <video controls muted loop playsinline preload="metadata">
-                  <source src="static/videos/egocentric_tasks/Allegro.mp4" type="video/mp4">
-                </video>
-              </div>
-            </div>
-            <div class="sdpg-carousel-panel" data-caption-text="Shadow Hand: In-Hand Manipulation" data-caption-meta="Dexterous manipulation · Egocentric RGB">
-              <div class="sdpg-carousel-media">
-                <video controls muted loop playsinline preload="metadata">
-                  <source src="static/videos/egocentric_tasks/shadow_hand.mp4" type="video/mp4">
+                  <source src="static/videos/egocentric_tasks/Franka.mp4" type="video/mp4">
                 </video>
               </div>
             </div>
@@ -472,10 +475,10 @@
                 </video>
               </div>
             </div>
-            <div class="sdpg-carousel-panel" data-caption-text="Franka: Pick" data-caption-meta="Tabletop manipulation · Egocentric RGB">
+            <div class="sdpg-carousel-panel" data-caption-text="Unitree G1: Hurdle" data-caption-meta="Humanoid locomotion · Egocentric RGB">
               <div class="sdpg-carousel-media">
                 <video controls muted loop playsinline preload="metadata">
-                  <source src="static/videos/egocentric_tasks/Franka.mp4" type="video/mp4">
+                  <source src="static/videos/egocentric_tasks/G1_hurtle_with_view.mp4" type="video/mp4">
                 </video>
               </div>
             </div>
@@ -500,10 +503,17 @@
                 </video>
               </div>
             </div>
-            <div class="sdpg-carousel-panel" data-caption-text="Unitree G1: Hurdle" data-caption-meta="Humanoid locomotion · Egocentric RGB">
+            <div class="sdpg-carousel-panel" data-caption-text="Allegro Hand: Cube Reorientation" data-caption-meta="Dexterous manipulation · Egocentric RGB">
               <div class="sdpg-carousel-media">
                 <video controls muted loop playsinline preload="metadata">
-                  <source src="static/videos/egocentric_tasks/G1_hurtle_with_view.mp4" type="video/mp4">
+                  <source src="static/videos/egocentric_tasks/Allegro.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+            <div class="sdpg-carousel-panel" data-caption-text="Shadow Hand: In-Hand Manipulation" data-caption-meta="Dexterous manipulation · Egocentric RGB">
+              <div class="sdpg-carousel-media">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/videos/egocentric_tasks/shadow_hand.mp4" type="video/mp4">
                 </video>
               </div>
             </div>
@@ -640,11 +650,14 @@
   <section class="section" id="BibTeX">
     <div class="container is-max-desktop content">
       <h2 class="title">BibTeX</h2>
-      <pre><code>@misc{you2026sdpg,
-  title  = {Efficient On-policy Visual {RL} via Stochastic Decoupled Policy Gradient},
-  author = {You, Haoxiang and Liu, Yilang and Abraham, Ian},
-  note   = {Under review},
-  year   = {2026}
+      <pre><code>@misc{you2026efficientonpolicyvisualrlstochastic,
+      title={Efficient On-policy Visual-RL via Stochastic Decoupled Policy Gradient},
+      author={Haoxiang You and Yilang Liu and Davis Zong and Qian Wang and Teeratham Vitchutripop and Qi Wang and Daniel Rakita and Ian Abraham},
+      year={2026},
+      eprint={2605.26478},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2605.26478},
 }</code></pre>
     </div>
   </section>
