@@ -334,11 +334,8 @@
       <h2 class="title is-3 has-text-centered">Visual MuJoCo Benchmark</h2>
       <div class="content has-text-justified">
         <p>
-          On visual MuJoCo benchmarks, SDPG achieves the <strong>highest rewards</strong>, matching state-based performance across all tasks.
-          It is competitive with teacher&ndash;student distillation in training time and significantly faster than other end-to-end visual
-          RL methods. Despite being on-policy, SDPG's memory usage is comparable to off-policy and model-based approaches&mdash;enabled by
-          accurate gradient estimation with only <strong>64</strong> batched environments (vs. 4096 in PPO), allowing training on a single
-          NVIDIA RTX 4080 GPU.
+          On visual MuJoCo benchmarks, SDPG achieves <strong>high rewards</strong>, matching state-based performance,
+          and <strong>fast training</strong>, on par with distillation and far quicker than other end-to-end visual RL methods.
         </p>
       </div>
 
@@ -350,16 +347,62 @@
         </figcaption>
       </figure>
 
-      <!-- Memory scaling figure + usage table, side by side -->
-      <div class="columns is-centered is-vcentered" style="margin-top: 2rem;">
-        <div class="column is-half">
-          <figure class="image">
-            <img src="static/images/memory_scale.png" alt="Memory scaling" loading="lazy"/>
-            <figcaption class="has-text-centered" style="margin-top: 0.5rem;">
-              <small><strong>Figure 3.</strong> Memory scaling. Visual environments require significantly more memory than state-based ones.</small>
-            </figcaption>
-          </figure>
+      <p class="has-text-centered" style="margin-top: 2rem; margin-bottom: 1rem;">
+        <small>Visual control on classic MuJoCo tasks from third-person RGB.</small>
+      </p>
+
+      <div class="sdpg-carousel-shell" data-sdpg-carousel data-label="Visual MuJoCo Benchmark">
+        <div class="sdpg-carousel">
+          <button class="sdpg-arrow prev" type="button" data-prev aria-label="Previous task">&#10094;</button>
+          <button class="sdpg-arrow next" type="button" data-next aria-label="Next task">&#10095;</button>
+
+          <div class="sdpg-carousel-stage">
+            <div class="sdpg-carousel-panel is-active" data-caption-text="Hopper" data-caption-meta="Visual MuJoCo · Third-person RGB">
+              <div class="sdpg-carousel-media">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/videos/mujoco_benchmarks/hopper_trajectory.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+            <div class="sdpg-carousel-panel" data-caption-text="Humanoid" data-caption-meta="Visual MuJoCo · Third-person RGB">
+              <div class="sdpg-carousel-media">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/videos/mujoco_benchmarks/humanoid_black.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+            <div class="sdpg-carousel-panel" data-caption-text="Ant" data-caption-meta="Visual MuJoCo · Third-person RGB">
+              <div class="sdpg-carousel-media">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/videos/mujoco_benchmarks/ant_trajectory.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+            <div class="sdpg-carousel-panel" data-caption-text="Walker" data-caption-meta="Visual MuJoCo · Third-person RGB">
+              <div class="sdpg-carousel-media">
+                <video controls muted loop playsinline preload="metadata">
+                  <source src="static/videos/mujoco_benchmarks/walker_trajectory.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+          </div>
+
+          <div class="sdpg-dots" data-dots></div>
         </div>
+      </div>
+
+      <div class="content has-text-justified" style="margin-top: 2rem;">
+        <p>
+          A key bottleneck in applying on-policy methods like PPO to visual RL is <strong>memory</strong>: they rely on
+          thousands of parallel environments (e.g., 4096) to estimate gradients, and rendering pixel observations for so many
+          environments quickly exhausts GPU memory. By mixing different environments, SDPG estimates gradients accurately
+          with an order of magnitude fewer batch-rendered environments, keeping memory usage on par with
+          off-policy and model-based approaches&mdash;and enabling training on a single NVIDIA RTX 4080 GPU.
+        </p>
+      </div>
+
+      <!-- Memory scaling figure + usage table, side by side -->
+      <div class="columns is-centered" style="margin-top: 2rem;">
         <div class="column is-half">
           <div class="content">
             <h3 class="title is-6 has-text-centered">Memory Usage (GB)</h3>
@@ -380,70 +423,18 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
-  <!-- End benchmark results -->
-
-
-  <!-- MuJoCo benchmark videos -->
-  <section class="hero is-small is-light">
-    <div class="hero-body">
-      <div class="container">
-        <h2 class="title is-3 has-text-centered">MuJoCo Benchmark</h2>
-        <p class="has-text-centered" style="margin-bottom: 1rem;">
-          <small>Visual control on classic MuJoCo tasks from third-person RGB. SDPG matches state-based performance across all tasks.</small>
-        </p>
-
-        <div class="sdpg-carousel-shell" data-sdpg-carousel data-label="Visual MuJoCo Benchmark">
-          <div class="sdpg-carousel">
-            <button class="sdpg-arrow prev" type="button" data-prev aria-label="Previous task">&#10094;</button>
-            <button class="sdpg-arrow next" type="button" data-next aria-label="Next task">&#10095;</button>
-
-            <div class="sdpg-carousel-stage">
-              <div class="sdpg-carousel-panel is-active" data-caption-text="Hopper" data-caption-meta="Visual MuJoCo · Third-person RGB">
-                <div class="sdpg-carousel-media">
-                  <video controls muted loop playsinline preload="metadata">
-                    <source src="static/videos/mujoco_benchmarks/hopper_trajectory.mp4" type="video/mp4">
-                  </video>
-                </div>
-              </div>
-              <div class="sdpg-carousel-panel" data-caption-text="Humanoid" data-caption-meta="Visual MuJoCo · Third-person RGB">
-                <div class="sdpg-carousel-media">
-                  <video controls muted loop playsinline preload="metadata">
-                    <source src="static/videos/mujoco_benchmarks/humanoid_black.mp4" type="video/mp4">
-                  </video>
-                </div>
-              </div>
-              <div class="sdpg-carousel-panel" data-caption-text="Ant" data-caption-meta="Visual MuJoCo · Third-person RGB">
-                <div class="sdpg-carousel-media">
-                  <video controls muted loop playsinline preload="metadata">
-                    <source src="static/videos/mujoco_benchmarks/ant_trajectory.mp4" type="video/mp4">
-                  </video>
-                </div>
-              </div>
-              <div class="sdpg-carousel-panel" data-caption-text="Walker" data-caption-meta="Visual MuJoCo · Third-person RGB">
-                <div class="sdpg-carousel-media">
-                  <video controls muted loop playsinline preload="metadata">
-                    <source src="static/videos/mujoco_benchmarks/walker_trajectory.mp4" type="video/mp4">
-                  </video>
-                </div>
-              </div>
-            </div>
-
-            <div class="sdpg-dots" data-dots></div>
-
-            <div class="sdpg-caption">
-              <div class="sdpg-caption-label">Visual MuJoCo Benchmark</div>
-              <div class="sdpg-caption-text" data-caption-text-out></div>
-              <div class="sdpg-caption-meta" data-caption-meta-out></div>
-            </div>
-          </div>
+        <div class="column is-half">
+          <figure class="image" style="margin-top: 0.5rem;">
+            <img src="static/images/memory_scale.png" alt="Memory scaling" loading="lazy"/>
+            <figcaption class="has-text-centered" style="margin-top: 0.5rem;">
+              <small><strong>Figure 3.</strong> Memory scaling. Visual environments require significantly more memory than state-based ones.</small>
+            </figcaption>
+          </figure>
         </div>
       </div>
     </div>
   </section>
-  <!-- End MuJoCo benchmark videos -->
+  <!-- End benchmark results -->
 
 
   <!-- Egocentric task suite videos -->
