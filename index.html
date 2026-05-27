@@ -57,7 +57,7 @@
 
   <!-- Critical CSS -->
   <link rel="stylesheet" href="static/css/bulma.min.css">
-  <link rel="stylesheet" href="static/css/index.css?v=2">
+  <link rel="stylesheet" href="static/css/index.css?v=5">
 
   <!-- Non-critical CSS -->
   <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -203,6 +203,17 @@
   </button>
 
   <main id="main-content">
+
+  <!-- Quick-jump section navigation -->
+  <nav class="section-nav" aria-label="Section navigation">
+    <a href="#abstract">Abstract</a>
+    <a href="#method">Method</a>
+    <a href="#benchmark">Benchmark</a>
+    <a href="#tasks">Tasks</a>
+    <a href="#sim2real">Sim-to-Real</a>
+    <a href="#BibTeX">BibTeX</a>
+  </nav>
+
   <section class="hero">
     <div class="hero-body">
       <div class="container is-max-desktop">
@@ -281,7 +292,7 @@
 
 
   <!-- Paper abstract -->
-  <section class="section hero is-light">
+  <section class="section hero is-light" id="abstract">
     <div class="container is-max-desktop">
       <div class="columns is-centered has-text-centered">
         <div class="column is-four-fifths">
@@ -305,7 +316,7 @@
 
 
   <!-- Method Overview -->
-  <section class="section">
+  <section class="section" id="method">
     <div class="container is-max-desktop">
       <div class="columns is-centered has-text-centered">
         <div class="column">
@@ -334,7 +345,7 @@
 
 
   <!-- Benchmark Results -->
-  <section class="section hero is-light">
+  <section class="section hero is-light" id="benchmark">
     <div class="container is-max-desktop">
       <h2 class="title is-3 has-text-centered">Visual MuJoCo Benchmark</h2>
       <div class="content has-text-justified">
@@ -443,7 +454,7 @@
 
 
   <!-- Egocentric task suite videos -->
-  <section class="section">
+  <section class="section" id="tasks">
     <div class="container is-max-desktop">
       <h2 class="title is-3 has-text-centered">Egocentric Task Suite</h2>
       <div class="content has-text-justified" style="margin: 0 auto 1.25rem; max-width: 820px;">
@@ -534,7 +545,7 @@
 
 
   <!-- Sim-to-Real: real-world experiments -->
-  <section class="hero is-small is-light">
+  <section class="hero is-small is-light" id="sim2real">
     <div class="hero-body">
       <div class="container is-max-desktop">
         <h2 class="title is-3 has-text-centered">Sim-to-Real: Unitree Go2</h2>
@@ -642,6 +653,36 @@
         if (nextBtn) nextBtn.addEventListener('click', function () { render(active + 1); });
         render(0);
       });
+    })();
+  </script>
+
+  <!-- Quick-jump nav: reveal after hero, highlight current section -->
+  <script>
+    (function () {
+      var nav = document.querySelector('.section-nav');
+      if (!nav) return;
+      var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
+      var sections = links
+        .map(function (a) { return document.querySelector(a.getAttribute('href')); })
+        .filter(Boolean);
+
+      function onScroll() {
+        // Show the menu once the user scrolls past the top hero.
+        nav.classList.toggle('visible', window.pageYOffset > 300);
+
+        // Highlight the section currently nearest the top of the viewport.
+        var marker = window.pageYOffset + 120;
+        var current = sections[0];
+        sections.forEach(function (s) {
+          if (s.offsetTop <= marker) current = s;
+        });
+        links.forEach(function (a) {
+          a.classList.toggle('active', current && a.getAttribute('href') === '#' + current.id);
+        });
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
     })();
   </script>
 
